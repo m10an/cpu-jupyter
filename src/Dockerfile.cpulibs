@@ -1,0 +1,22 @@
+LABEL maintainer="Christoph Schranz <christoph.schranz@salzburgresearch.at>"
+
+# Install Tensorflow CPU build
+# installation via conda leads to errors in version 4.8.2
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir "tensorflow-cpu==2.6.2" && \
+    pip install --no-cache-dir keras
+
+# Install PyTorch with dependencies
+RUN conda install --quiet --yes \
+    pyyaml mkl mkl-include setuptools cmake cffi typing && \
+    conda clean --all -f -y && \
+    fix-permissions $CONDA_DIR && \
+    fix-permissions /home/$NB_USER
+
+# Install PyTorch CPU build
+RUN pip install --no-cache-dir torch torchvision torchaudio torchviz
+
+USER root
+RUN fix-permissions /home/$NB_USER
+
+USER $NB_UID

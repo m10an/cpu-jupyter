@@ -1,7 +1,7 @@
 version: "3.4"
 services:
-  gpu-jupyter:
-    image: 127.0.0.1:$REGISTRY_PORT/gpu-jupyter
+  cpu-jupyter:
+    image: 127.0.0.1:$REGISTRY_PORT/cpu-jupyter
     build: .build
     ports:
       - $JUPYTER_PORT:8888

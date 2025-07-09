@@ -26,7 +26,7 @@ if [[ $REGISTRY != [0-9][0-9][0-9][0-9]* ]]; then
 fi
 
 if [[ $NETWORK == "" ]]; then
-    echo "No docker network was provided to which this gpu-jupyter should be added to."
+    echo "No docker network was provided to which this cpu-jupyter should be added to."
     echo "Usage: $0 -p [port] -n [docker-network] -r [registry-port] # ports must be an integer with 4 or more digits."
     exit 22
 fi
@@ -43,16 +43,16 @@ export HOSTNAME=$(hostname)
 export JUPYTER_PORT=$PORT
 export REGISTRY_PORT=$REGISTRY
 export JUPYTER_NETWORK=$NETWORK
-echo "Adding gpu-jupyter to the swarm on the node $HOSTNAME in the network $NETWORK on port $PORT and registry to port $REGISTRY."
+echo "Adding cpu-jupyter to the swarm on the node $HOSTNAME in the network $NETWORK on port $PORT and registry to port $REGISTRY."
 
 # substitute the blueprint docker-compose-swarm with the environment variables and stack deploy it.
 envsubst < docker-compose-swarm.yml > .docker-compose-swarm.yml.envsubst
 docker-compose -f .docker-compose-swarm.yml.envsubst build
 docker-compose -f .docker-compose-swarm.yml.envsubst push
-docker stack deploy --compose-file .docker-compose-swarm.yml.envsubst gpu
+docker stack deploy --compose-file .docker-compose-swarm.yml.envsubst cpu
 rm .docker-compose-swarm.yml.envsubst
 
 echo
-echo "Added gpu-jupyter to docker swarm $NETWORK on port $JUPYTER_PORT."
-echo "See 'docker service ps gpu_gpu-jupyter' for status info."
-echo "See 'docker service logs -f gpu_gpu-jupyter' for logs."
+echo "Added cpu-jupyter to docker swarm $NETWORK on port $JUPYTER_PORT."
+echo "See 'docker service ps cpu_cpu-jupyter' for status info."
+echo "See 'docker service logs -f cpu_cpu-jupyter' for logs."
