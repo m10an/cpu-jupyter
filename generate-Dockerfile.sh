@@ -102,14 +102,13 @@ else
   echo "Set 'no-datascience-notebook' = 'python-only', not installing the datascience-notebook with Julia and R."
 fi
 
-# Note that the following step also installs the cudatoolkit, which is
-# essential to access the GPU.
+# Add the core CPU-based data science libraries
 echo "
 ############################################################################
-########################## Dependency: gpulibs #############################
+########################## Dependency: cpulibs #############################
 ############################################################################
 " >> $DOCKERFILE
-cat src/Dockerfile.gpulibs >> $DOCKERFILE
+cat src/Dockerfile.cpulibs >> $DOCKERFILE
 
 # install useful packages if not excluded or spare mode is used
 if [[ "$no_useful_packages" != 1 ]]; then
@@ -152,7 +151,7 @@ export JUPYTER_GID=$(id -g)
 
 #cp $(find $(dirname $DOCKERFILE) -type f | grep -v $STACKS_DIR | grep -v .gitkeep) .
 echo
-echo "The GPU Dockerfile was generated successfully in file ${DOCKERFILE}."
-echo "To start the GPU-based Juyterlab instance, run:"
-echo "  docker build -t gpu-jupyter .build/  # will take a while"
-echo "  docker run --gpus all -d -it -p 8848:8888 -v $(pwd)/data:/home/jovyan/work -e GRANT_SUDO=yes -e JUPYTER_ENABLE_LAB=yes -e NB_UID=$(id -u) -e NB_GID=$(id -g) --user root --restart always --name gpu-jupyter_1 gpu-jupyter"
+echo "The CPU Dockerfile was generated successfully in file ${DOCKERFILE}."
+echo "To start the JupyterLab instance, run:"
+echo "  docker build -t cpu-jupyter .build/  # will take a while"
+echo "  docker run -d -it -p 8848:8888 -v $(pwd)/data:/home/jovyan/work -e GRANT_SUDO=yes -e JUPYTER_ENABLE_LAB=yes -e NB_UID=$(id -u) -e NB_GID=$(id -g) --user root --restart always --name cpu-jupyter_1 cpu-jupyter"
